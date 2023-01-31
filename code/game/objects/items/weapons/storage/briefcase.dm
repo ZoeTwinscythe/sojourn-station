@@ -13,6 +13,31 @@
 	max_storage_space = 20 //Its a big case
 	matter = list(MATERIAL_BIOMATTER = 8, MATERIAL_PLASTIC = 4)
 	price_tag = 90
+
+/obj/item/storage/briefcase/verb/toggle_style()
+	set name = "Adjust Style"
+	set category = "Object"
+	set src in usr
+
+	if(!isliving(loc))
+		return
+
+	var/mob/M = usr
+	var/list/options = list()
+	options["Brown"] = "briefcase"
+	options["Grey"] = "briefcase_grey"
+
+	var/choice = input(M,"What kind of style do you want?","Adjust Style") as null|anything in options
+
+	if(src && choice && !M.incapacitated() && Adjacent(M))
+		icon_state = options[choice]
+		item_state = options[choice]
+		to_chat(M, "You adjusted your attire's style into [choice] mode.")
+		update_icon()
+		update_wear_icon()
+		usr.update_action_buttons()
+		return 1
+
 /*
 /obj/item/storage/briefcase/rifle //replaced with the 'duffel' child item
 	name = "gun case"
